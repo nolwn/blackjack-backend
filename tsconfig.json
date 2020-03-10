@@ -6,6 +6,7 @@
 		"rootDirs": ["/src"],
 		"sourceMap": true,
 		"outDir": "dist",
+		"strict": true,
 		"declaration": true,
 		"target": "es5"
 	},

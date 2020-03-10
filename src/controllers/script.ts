@@ -1,7 +1,7 @@
 import { Router } from "express";
 
-export const scripts = Router();
+export const script = Router();
 
-scripts.get("/", (req, res) => {
+script.get("/", (req, res) => {
 	res.send("Sripts boom");
 });

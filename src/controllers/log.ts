@@ -1,7 +1,7 @@
 import { Router } from "express";
 
-export const logs = Router();
+export const log = Router();
 
-logs.get("/", (req, res) => {
+log.get("/", (req, res) => {
 	res.send("Log boom");
 });

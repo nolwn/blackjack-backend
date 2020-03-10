@@ -1,5 +1,5 @@
-import { games } from "./game";
-import { logs } from "./log";
-import { scripts } from "./script";
+import { game } from "./game";
+import { log } from "./log";
+import { script } from "./script";
 
-export { games, logs, scripts };
+export { game, log, script };
