@@ -11,17 +11,17 @@ let attemptConnection: Promise<void | MongoClient> = MongoClient.connect(
 	{ useNewUrlParser: true, useUnifiedTopology: true }
 ).catch(err => console.log("Database connection failed", err));
 
-export const getDB = async (): Db => {
+export async function getDB(): Promise<Db> {
 	const connection = await attemptConnection;
 	if (isMongoClient(connection)) {
 		return connection.db(database);
 	} else {
 		throw new Error("Failed for form connection");
 	}
-};
+}
 
-const isMongoClient = (
+function isMongoClient(
 	connection: MongoClient | void
-): connection is MongoClient => {
+): connection is MongoClient {
 	return !!connection;
-};
+}
