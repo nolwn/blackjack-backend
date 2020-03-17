@@ -4,6 +4,8 @@ export interface Resource {
 
 export interface Record {
 	_id: string;
+	deck: Card[];
+	discard: Card[];
 }
 
 export interface ResponseItem {
@@ -15,32 +17,31 @@ export interface ResponseItems {
 }
 
 export interface GamePost {
-	participantId: string;
-	scriptID: string;
-	house: Array<Card>;
-	player: Array<Card>;
 	bankroll: number;
 	bet: number;
-	winnings: number;
 	hand: number;
+	dealer: Array<Card>;
+	participantId: string;
+	player: Array<Card>;
+	winnings: number;
 }
 
 export interface GameRecord extends GamePost, Record {}
 export interface GameResponse extends GamePost, Resource {}
 
-interface Card {
-	suit: Suit;
-	value: Value;
+export interface Card {
+	suit: Suit | null;
+	value: Value | null;
 }
 
-enum Suit {
-	Spades = "Spades",
-	Hearts = "Hearts",
+export enum Suit {
 	Clubs = "Clubs",
-	Diamonds = "Diamonds"
+	Diamonds = "Diamonds",
+	Hearts = "Hearts",
+	Spades = "Spades"
 }
 
-enum Value {
+export enum Value {
 	Ace = "Ace",
 	Two = "2",
 	Three = "3",

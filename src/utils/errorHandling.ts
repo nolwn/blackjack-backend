@@ -1,5 +1,5 @@
 import { Response, Request, NextFunction } from "express";
-import { ErrorBody } from "../types/response";
+import { ErrorResponse } from "../types/response";
 
 export function handleMissingRoute(
 	_req: Request,
@@ -15,29 +15,50 @@ export function handleMissingRoute(
 }
 
 export function handleError(
-	err: ErrorBody,
+	err: Error | ServerError,
 	_req: Request,
 	res: Response,
 	_next: NextFunction
 ) {
-	const error: ErrorBody = {
+	const error: ErrorResponse = {
 		status: 500,
-		message: "Internal server error."
+		message: "Internal Server Error"
 	};
 
-	error.status = err.status;
-	error.message = err.message;
-	if (err.stack) {
+	if ("statusCode" in err) {
+		error.status = err.statusCode;
+	}
+
+	if ("stack" in err) {
 		error.stack = err.stack;
 	}
 
-	res.status(error.status).send();
+	error.message = err.message;
+
+	res.status(error.status).send(error);
 }
 
-class UserError extends Error {
-	constructor(message: string) {
+class ServerError extends Error {
+	statusCode: number;
+
+	constructor(message: string, status: number) {
 		super(message);
-		this.name = "UserError";
-		Error.captureStackTrace(this, UserError);
+		this.statusCode = status;
+	}
+}
+
+export class ResourceNotFoundError extends ServerError {
+	constructor(message: string) {
+		super(message, 404);
+		this.name = "ResourceNotFoundError";
+		Error.captureStackTrace(this, ResourceNotFoundError);
+	}
+}
+
+export class BadGameStateError extends ServerError {
+	constructor(message: string) {
+		super(message, 400);
+		this.name = "BadGameStateError";
+		Error.captureStackTrace(this, BadGameStateError);
 	}
 }

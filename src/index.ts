@@ -3,7 +3,7 @@ import bodyParser from "body-parser";
 import dotEnv from "dotenv";
 dotEnv.config();
 
-import { game, log, script } from "./controllers";
+import { game, log } from "./controllers";
 import { handleMissingRoute, handleError } from "./utils";
 
 const port = 3001;
@@ -15,7 +15,6 @@ app.use(bodyParser.json());
 // Controllers
 app.use("/game", game);
 app.use("/log", log);
-app.use("/script", script);
 
 // Error handling
 app.use(handleMissingRoute);

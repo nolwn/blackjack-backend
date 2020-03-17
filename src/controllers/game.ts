@@ -1,14 +1,18 @@
 import { Router, NextFunction, Request, Response } from "express";
-import { ResponseItem, ResponseItems } from "../types";
-import { getGames, getGame, createGame } from "../models/game";
-import { fixIds } from "../utils";
+import {
+	ResponseItem,
+	ResponseItems,
+	GameRecord,
+	GameResponse
+} from "../types";
+import { getGames, getGame, createGame, deal } from "../models/game";
 
 export const game = Router();
 
 game.get("/", async (req, res) => {
 	const games = await getGames();
 
-	const response: ResponseItems = { data: fixIds(games) };
+	const response: ResponseItems = { data: prepareResponses(games) };
 
 	res.status(200).send(response);
 });
@@ -45,3 +49,31 @@ game.post("/", async (req: Request, res: Response, next: NextFunction) => {
 		next({ message: "Could not create game." });
 	}
 });
+
+game.patch(
+	"/:gameid/deal",
+	async (req: Request, res: Response, next: NextFunction) => {
+		const gameId: string = req.params.gameid;
+
+		try {
+			const newGameState = await deal(gameId);
+			res.status(200).send(newGameState);
+		} catch (err) {
+			next(err);
+		}
+	}
+);
+
+function prepareResponse(record: GameRecord): GameResponse {
+	const response: any = { ...record };
+	response.id = record._id;
+
+	delete response.deck;
+	delete response._id;
+
+	return response;
+}
+
+function prepareResponses(records: GameRecord[]): GameResponse[] {
+	return records.map(record => prepareResponse(record));
+}

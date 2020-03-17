@@ -1,4 +1,4 @@
-export interface ErrorBody {
+export interface ErrorResponse {
 	status: number;
 	message: string;
 	stack?: any;
