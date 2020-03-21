@@ -1,4 +1,5 @@
 import _ from "lodash";
+import { GameRecord } from "../types";
 
 export function isStringArray(items: any): items is Array<string> {
 	if (!_.isArray(items)) return false;
@@ -8,4 +9,8 @@ export function isStringArray(items: any): items is Array<string> {
 	}
 
 	return true;
+}
+
+export function isGameRecord(record: GameRecord | null): record is GameRecord {
+	return !!record;
 }

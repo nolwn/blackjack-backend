@@ -1,11 +1,12 @@
 import { Router, NextFunction, Request, Response } from "express";
 import {
-	ResponseItem,
+	HttpResponse,
 	ResponseItems,
 	GameRecord,
-	GameResponse
+	GameResponse,
+	Hand
 } from "../types";
-import { getGames, getGame, createGame, deal } from "../models/game";
+import { getGames, getGame, createGame, deal, hit } from "../models/game";
 
 export const game = Router();
 
@@ -27,7 +28,8 @@ game.get(
 			return next({ status: 404, message: "Game not found." });
 		}
 
-		const response: ResponseItem = { data: { id: _id, ...gameData } };
+		const bodyData: GameResponse = { id: _id, ...gameData };
+		const response: HttpResponse = { data: bodyData };
 
 		res.status(200).send(response);
 	}
@@ -38,7 +40,7 @@ game.post("/", async (req: Request, res: Response, next: NextFunction) => {
 
 	try {
 		const gameID = await createGame(participantId);
-		const response: ResponseItem = {
+		const response: HttpResponse = {
 			data: { id: gameID }
 		};
 		res.status(201).send(response);
@@ -58,6 +60,24 @@ game.patch(
 		try {
 			const newGameState = await deal(gameId);
 			res.status(200).send(newGameState);
+		} catch (err) {
+			next(err);
+		}
+	}
+);
+
+game.patch(
+	"/:gameid/playerhit",
+	async (req: Request, res: Response, next: NextFunction) => {
+		const gameId: string = req.params.gameid;
+
+		try {
+			const { _id, ...gameData } = await hit(gameId, Hand.Player);
+
+			const bodyData: GameResponse = { id: _id, ...gameData };
+			const response: HttpResponse = { data: bodyData };
+
+			res.status(200).send(response);
 		} catch (err) {
 			next(err);
 		}

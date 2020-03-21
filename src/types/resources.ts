@@ -8,7 +8,7 @@ export interface Record {
 	discard: Card[];
 }
 
-export interface ResponseItem {
+export interface HttpResponse {
 	data: Resource;
 }
 
@@ -55,4 +55,9 @@ export enum Value {
 	Jack = "Jack",
 	Queen = "Queen",
 	King = "King"
+}
+
+export enum Hand {
+	Dealer = "dealer",
+	Player = "player"
 }
