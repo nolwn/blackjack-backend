@@ -35,7 +35,7 @@ export function handleError(
 
 	error.message = err.message;
 
-	res.status(error.status).send(error);
+	res.status(error.status).send({ error });
 }
 
 class ServerError extends Error {
@@ -60,5 +60,13 @@ export class BadGameStateError extends ServerError {
 		super(message, 400);
 		this.name = "BadGameStateError";
 		Error.captureStackTrace(this, BadGameStateError);
+	}
+}
+
+export class InvalidBodyError extends ServerError {
+	constructor(message: string) {
+		super(message, 400);
+		this.name = "InvalidBodyError";
+		Error.captureStackTrace(this, InvalidBodyError);
 	}
 }

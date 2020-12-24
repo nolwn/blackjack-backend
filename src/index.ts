@@ -1,6 +1,7 @@
-import express from "express";
 import bodyParser from "body-parser";
 import dotEnv from "dotenv";
+import express from "express";
+
 dotEnv.config();
 
 import { game, log } from "./controllers";

@@ -1,0 +1,151 @@
+---
+openapi: 3.0.0
+info:
+  title: Blackjack Server
+  description: Manages and plays games of blackjack.
+  version: 0.0.1
+paths:
+  "/game":
+    get:
+      summary: Gets a list of all games
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/gameResponse"
+                example:
+                  data:
+                    - id: 5e6f05d69eb1a8419b5e6c23
+                      participantId: "1"
+                      hand: 1
+                      bet: 300
+                      winnings: 0
+                      dealer:
+                        - suit:
+                          value:
+                        - suit: Hearts
+                          value: King
+                      player:
+                        - suit: Diamonds
+                          value: "2"
+                        - suit: Spades
+                          value: "7"
+        "404":
+          description: Game not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/errorBody"
+                example:
+                  error:
+                    status: 404
+                    message: Game not found.
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/errorBody"
+    post:
+      summary: Creates a new game
+      requestBody:
+        description: Create new game request body.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/gameRequest"
+            example:
+              participantId: "13"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/gameResponse"
+                example:
+                  participantId: "1"
+  "/game/{gameId}":
+    get:
+      summary: Get a single game
+      parameters:
+        - in: path
+          name: gameId
+          schema:
+            type: string
+          required: true
+          description: Id of the game.
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/gameResponse"
+        "404":
+          description: Game not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/errorBody"
+components:
+  schemas:
+    gameResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        participantId:
+          type: string
+        player:
+          type: array
+          items:
+            type: object
+            properties:
+              suit:
+                type: string
+              value:
+                type: string
+        dealer:
+          type: array
+          items:
+            type: object
+            properties:
+              suit:
+                type: string
+              value:
+                type: string
+        bankroll:
+          type: number
+        bet:
+          type: number
+        hand:
+          type: number
+        winnings:
+          type: number
+    gameRequest:
+      type: object
+      properties:
+        participantId:
+          type: string
+    errorBody:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: number
+            message:
+              type: string
